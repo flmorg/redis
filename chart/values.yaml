@@ -1,0 +1,57 @@
+statefulSet:
+  serviceName: service
+  serviceAccountName: service-account
+  replicas: 1
+  containers:
+    - name: redis
+      image:
+        repository: bitnami/redis
+        tag: "7.0"
+      ports:
+        - name: redis
+          containerPort: 6379
+      resources:
+        requests:
+          cpu: 0m
+          memory: 0Mi
+        limits:
+          cpu: 500m
+          memory: 1024Mi
+      envFromSecret:
+        - secretName: auth-secret
+          envs:
+            - name: REDIS_PASSWORD
+              key: REDIS_PASSWORD
+      volumeMounts:
+        - name: storage
+          mountPath: /bitnami/redis/data
+          subPath: redis
+  volumes:
+    - name: storage
+      type: pvc
+      typeName: storage-pvc
+
+infisicalSecrets:
+  - name: infisical-auth-secret
+    serviceTokenSecretName: service-token
+    secretsPath: /redis
+    secretName: auth-secret
+
+pvcs:
+  - name: storage-pvc
+    storageClassName: local-path-persistent
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
+    volumeMode: Filesystem
+
+serviceAccount:
+  name: service-account
+
+services:
+  - name: service
+    type: ClusterIP
+    ports:
+      - name: redis
+        protocol: TCP
+        port: 6379
