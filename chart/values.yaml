@@ -21,7 +21,7 @@ statefulSet:
         - secretName: auth-secret
           envs:
             - name: REDIS_PASSWORD
-              key: REDIS_PASSWORD
+              key: PASSWORD
       volumeMounts:
         - name: storage
           mountPath: /bitnami/redis/data
@@ -30,12 +30,6 @@ statefulSet:
     - name: storage
       type: pvc
       typeName: storage-pvc
-
-infisicalSecrets:
-  - name: infisical-auth-secret
-    serviceTokenSecretName: service-token
-    secretsPath: /redis
-    secretName: auth-secret
 
 pvcs:
   - name: storage-pvc
@@ -55,3 +49,9 @@ services:
       - name: redis
         protocol: TCP
         port: 6379
+
+vaultSecrets:
+  - name: auth-secret
+    path: secrets/redis
+    templates:
+      PASSWORD: "{% .Secrets.password %}"
