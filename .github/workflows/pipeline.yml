@@ -1,10 +1,10 @@
 on:
   workflow_call:
   workflow_dispatch:
-  push:
-    paths:
-      - 'chart/**'
-    branches: [ main ]
+  # push:
+  #   paths:
+  #     - 'chart/**'
+  #   branches: [ main ]
 
 jobs:
   deploy_universal:
@@ -15,5 +15,4 @@ jobs:
       chartName: universal-chart
       version: ^1.0.0
       valuesPath: chart/values.yaml
-      releaseName: main
     secrets: inherit
