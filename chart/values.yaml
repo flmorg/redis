@@ -5,8 +5,15 @@ statefulSet:
   containers:
     - name: redis
       image:
-        repository: bitnami/redis
-        tag: "7.0"
+        repository: redis
+        tag: "8"
+      command:
+        - sh
+        - -c
+        - |
+          exec redis-server \
+            --requirepass "$REDIS_PASSWORD" \
+            --appendonly yes
       ports:
         - name: redis
           containerPort: 6379
