@@ -33,11 +33,10 @@ statefulSet:
 
 pvcs:
   - name: storage-pvc
-    storageClassName: local-path-persistent
+    storageClassName: longhorn
     accessModes:
       - ReadWriteOnce
     size: 1Gi
-    volumeMode: Filesystem
 
 serviceAccount:
   name: service-account
